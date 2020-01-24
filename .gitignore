@@ -1,0 +1,29 @@
+# Python
+*.pyc
+.cache
+.coverage
+*.egg-info
+build
+*pycache*
+*/.ipynb_checkpoints/*
+.ipynb_checkpoints/*
+*checkpoints*
+/tests/tmp/*
+/data/classification/*
+/data/regression/*
+*.pytest.cache*
+
+
+# IDEs and editors
+*.swp
+.vscode
+.idea
+
+
+# Other
+.DS_Store
+*.notes
+.directory
+.pytest_cache/v/cache/*
+tmp/*
+output/*
