@@ -12,7 +12,7 @@ build
 /data/classification/*
 /data/regression/*
 *.pytest.cache*
-
+*/introml/*
 
 # IDEs and editors
 *.swp
@@ -26,4 +26,8 @@ build
 .directory
 .pytest_cache/v/cache/*
 tmp/*
+tmp/*/*
 output/*
+output/*/*
+config/introml.ini
+roster/introml.xlsx

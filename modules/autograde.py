@@ -3,6 +3,7 @@ import pandas as pd
 from nbconvert import PythonExporter
 from nbconvert import PDFExporter
 from sys import exit
+from pathlib import Path
 from bs4 import BeautifulSoup
 import glob
 import nbformat as nbf
@@ -19,33 +20,37 @@ GRADE_DIR = ''
 JSON_DIR = 'json'
 NOTEBOOKS_DIR = 'notebooks'
 ROSTER_DIR = 'roster'
-TMP='tmp'
+TMP_DIR='tmp'
 MISSING='MISSING'
+MODULES_DIR='modules'
 
-def set_config(base_dir, config, grade):
+def set_config(course, assignment, base_dir, config):
     #Grading will be done of this path.
     cf={}
+
     cf['kernal']=config['default']['kernal_name']
-    cf['assignment_name']=grade
     cf['mangrade_match_col']=config['default']['mangrade_match_col']
     cf['blackboard_match_col']=config['default']['blackboard_match_col']
     cf['blackboard_rename_col']=config['default']['blackboard_rename_col']
-    cf['assignments_path']=os.path.join(base_dir,ASSIGNMENTS_DIR,config[grade]['assignments_dir'])
-    cf['append_path']=os.path.join(base_dir,config[grade]['append_script'])
-    cf['tests_path']=os.path.join(base_dir,TESTS_DIR,config[grade]['tests_dir'])
-    cf['blackboard_total_col']=config[grade]['blackboard_total_col'].replace('"', '')
+    cf['assignments_path']= base_dir / ASSIGNMENTS_DIR / course / config[assignment]['assignments_dir']
+    cf['append_path']= base_dir / MODULES_DIR / config[assignment]['append_script']
+    cf['tests_path']= base_dir / TESTS_DIR / course / config[assignment]['tests_dir']
+    cf['blackboard_total_col']=config[assignment]['blackboard_total_col'].replace('"', '')
     cf['ignore']=config['default']['ignore'].replace('"', '').replace(' ', '').split(',')
-    cf['roster_path']=os.path.join(base_dir,ROSTER_DIR, config[grade]['roster'])
-    cf['notebook_output_path']=os.path.join(base_dir,OUTPUT_DIR, grade, NOTEBOOKS_DIR)
-    cf['grades_output_path']=os.path.join(base_dir, OUTPUT_DIR, grade)
-    cf['json_output_path']=os.path.join(base_dir, OUTPUT_DIR, grade,JSON_DIR)
-    #cf['autograde_output_path']=os.path.join(base_dir,OUTPUT_DIR, grade,config['default']['autograde'])
-    cf['mangrade_output_path']=os.path.join(base_dir, OUTPUT_DIR, grade, config['default']['mangrade'])
-    cf['status_output_path']=os.path.join(base_dir,OUTPUT_DIR, grade,config['default']['status_file'])
+    roster_file= course + '.xlsx'
+    cf['roster_path']=base_dir / ROSTER_DIR / roster_file
+    cf['notebook_output_path']= base_dir / OUTPUT_DIR / course / assignment / NOTEBOOKS_DIR
+    cf['grades_output_path']=  base_dir /  OUTPUT_DIR /  course / assignment
+    cf['json_output_path']= base_dir / OUTPUT_DIR / course / assignment / JSON_DIR
+    #cf['autograde_output_path']=os.path.join(base_dir,OUTPUT_DIR, assignment,config['default']['autograde'])
+    cf['mangrade_output_path']= base_dir / OUTPUT_DIR / course / assignment / config['default']['mangrade']
+    cf['status_output_path']= base_dir / OUTPUT_DIR / course / assignment / config['default']['status_file']
+    cf['tmp_path'] = base_dir / TMP_DIR
+
     if base_dir=='.':
         cf['autograde_lib']=os.path.join(os.pardir,os.pardir)
     else:
-        cf['autograde_lib']=os.path.join(base_dir)
+        cf['autograde_lib']=base_dir / MODULES_DIR
     #make required directories
     if not os.path.exists(cf['grades_output_path']):
         os.makedirs(cf['grades_output_path'])
@@ -54,13 +59,13 @@ def set_config(base_dir, config, grade):
     if not os.path.exists(cf['json_output_path']):
         os.makedirs(cf['json_output_path'])
     #TODO CHECK FILES
-    cf['points_per_test']=int(config[grade]['points_per_test'])
+    cf['points_per_test']=int(config[assignment]['points_per_test'])
     cf['variables']=config['default']['variables'].replace('"', '').replace(' ', '').split(',')
-    cf['answers']=config[grade]['answers'].replace('"', '').replace(' ', '').split(',')
-    cf['blackboard_starter']=os.path.join(base_dir,OUTPUT_DIR,config['default']['blackboard'])
-    cf['blackboard_output_path']=os.path.join(cf['grades_output_path'], config['default']['blackboard'])
+    cf['answers']=config[assignment]['answers'].replace('"', '').replace(' ', '').split(',')
+    cf['blackboard_starter']=base_dir / OUTPUT_DIR / config['default']['blackboard']
+    cf['blackboard_output_path']= cf['grades_output_path'] / config['default']['blackboard']
     cf['ok_file']=config['default']['ok_file']
-    cf['delete_cells']=config[grade]['delete_cells']
+    cf['delete_cells']=config[assignment]['delete_cells']
     return cf
 
 
@@ -131,12 +136,12 @@ def grade(cf, grade=100000, cleanup = True, regrade = False,submissions=[]):
     else:
         to_grade = submissions
         print("Total submissions:", len(submissions),"Grading all.")
-
+    tmp_path=Path(cf['tmp_path'])
     #Loop through all the grading
     for x in to_grade:
         row=df.shape[0]
         print("Grading assignment: ", x, "Number", row+1, "/",len(to_grade) )
-        cf['exec_path']=os.path.join(TMP,x)
+        cf['exec_path']=tmp_path / x
         #Add tests to temp directory
         copy_and_overwrite(cf['tests_path'], cf['exec_path'])
 
@@ -163,6 +168,10 @@ def grade(cf, grade=100000, cleanup = True, regrade = False,submissions=[]):
             notebook_tmp_output=os.path.join(cf['exec_path'],cf['notebook_output_file'])
             copy=copy_notebook(notebook_starter, notebook_exe, append_script,cf['delete_cells'])
             cf['github_id']=x
+            #we can't output Path objects to jason
+            for key in cf:
+                if isinstance(cf[key], Path):
+                    cf[key]=str(cf[key])
             #write the config to an autograding file.
             with open(os.path.join(cf['exec_path'],'config.json'), 'w') as fp:
                 json.dump(cf, fp, sort_keys=True, indent=4)

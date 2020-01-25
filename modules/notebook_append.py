@@ -9,7 +9,7 @@ sys.path.append(cf['autograde_lib'])
 import grading_object_detection as god
 
 #NEWCELL
-!pip install git+https://github.com/rpi-techfundamentals/Gofer-Grader
+#!pip install git+https://github.com/carme/Gofer-Grader
 
 #NEWCELL
 #Checks function.
@@ -40,7 +40,7 @@ def output_tests(cf, results):
     #This is a selection of variables from config file.
     for s in cf['variables']:
         if s in globals():
-            autograde[s]=eval(s).lower()
+            autograde[s]=eval(s)
         else:
             autograde[s]=None
 
