@@ -12,7 +12,7 @@ Generally, the workflow is as follows:
 
 Give it a try with the attached notebook and grade the sample exercises.  The sample exercises are setup to address a number of different test cases, including 0/3 -3/3 grades, no submission, duplicate submission, etc.
 
-### Using Github Classroom Google Colab
+### Using Google Colab
 Colab can be used to grade simple assignments due to its slower speed. For large classes, or simply just better performance, it is faster to grade on your laptop or on server.
 
 --> Colab Documentation is currently a WIP <--
