@@ -33,12 +33,15 @@ https://www.anaconda.com/distribution
 `conda install -c conda-forge notebook`
 
 5. Install the autograder library from Carme
-`conda create --name autograder --yes`
-`conda activate autograder`
-`#change to the autograder directory`
-`conda install -c anaconda git --yes`
-`conda install -c anaconda pip --yes`
-`pip install -r requirements.txt`
+
+```
+conda create --name autograder --yes
+conda activate autograder
+#change to the autograder directory
+conda install -c anaconda git --yes
+conda install -c anaconda pip --yes
+pip install -r requirements.txt
+```
 
 If you have problems with installation, make sure you activate the autograder in Anaconda Prompt using `conda activate autograder` and navigate to your local repository before installing the required tools.
 
