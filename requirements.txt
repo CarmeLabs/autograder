@@ -2,7 +2,7 @@ pytest==3.6.0
 ipython==6.4.0
 codecov==2.0.15
 pytest-cov==2.5.1
-git+https://github.com/carme/Gofer-Grader
+git+https://github.com/CarmeLabs/Gofer-Grader
 pandas
 prompt-toolkit==1.0.15
 bs4

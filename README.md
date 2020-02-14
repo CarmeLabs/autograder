@@ -12,14 +12,34 @@ Generally, the workflow is as follows:
 
 Give it a try with the attached notebook and grade the sample exercises.  The sample exercises are setup to address a number of different test cases, including 0/3 -3/3 grades, no submission, duplicate submission, etc.
 
+### Using Google Colab
+Colab can be used to grade simple assignments due to its slower speed. For large classes, or simply just better performance, it is faster to grade on your laptop or on server.
+
+--> Colab Documentation is currently a WIP <--
 
 ### Install Dependencies to Use Locally
-This can be done on colab for simple assignments.  For large classes or better performance it is faster to do on your laptop on server.
+These steps more or less cover everything you need to get the autograder working. It is assumed that you've cloned the repository to some local destination.
 
-Note that though it works on colab, when running locally there is a issue with Gopher Grader.  
+1. We'll be using Anaconda with Python 3.7, which you can get here:
+https://www.anaconda.com/distribution
 
-1. Make sure your conda environment is up to date.
+2. Open Anaconda Prompt and make sure your conda environment is up to date.
 `conda update conda`
 
-2. Create autograding environment.
+3. Create autograding environment.
 `conda create -n autograding python=3.6.8 anaconda`
+
+4. Install Jupyter Notebook.
+`conda install -c conda-forge notebook`
+
+5. Install the autograder library from Carme
+`conda create --name autograder --yes`
+`conda activate autograder`
+`#change to the autograder directory`
+`conda install -c anaconda git --yes`
+`conda install -c anaconda pip --yes`
+`pip install -r requirements.txt`
+
+If you have problems with installation, make sure you activate the autograder in Anaconda Prompt using `conda activate autograder` and navigate to your local repository before installing the required tools.
+
+Once the dependencies are installed, run Jupyter Notebook and find an assignment to grade (default location is within your local autograder repository).
