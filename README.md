@@ -8,14 +8,9 @@ Generally, the workflow is as follows:
 
   (2) Maintain all of the aspects of an assignment via a configuration file and roster.  This details aspects of the tests and the students.  If you collect notebooks via GitHub, this will allow a translation between GitHub and other notebooks.
 
-  (3) Run the grading notebook.  The grading notebook will (a.) load the configuration files with information on the setup, (b.) copy the notebook file from the github repository to a /tmp folder for grading, (c.) append grading code to the bottom of the notebook.  (d.) execute the notebook. (d.) Output a JSON file with the results.
+  (3) Run the grading notebook (located at 'autograder/notebooks/notebook.ipynb'.  The grading notebook will (a.) load the configuration files with information on the setup, (b.) copy the notebook file from the github repository to a /tmp folder for grading, (c.) append grading code to the bottom of the notebook.  (d.) execute the notebook. (d.) Output a JSON file with the results.
 
 Give it a try with the attached notebook and grade the sample exercises.  The sample exercises are setup to address a number of different test cases, including 0/3 -3/3 grades, no submission, duplicate submission, etc.
-
-### Using Google Colab
-Colab can be used to grade simple assignments due to its slower speed. For large classes, or simply just better performance, it is faster to grade on your laptop or on server.
-
---> Colab Documentation is currently a WIP <--
 
 ### Install Dependencies to Use Locally
 These steps more or less cover everything you need to get the autograder working. It is assumed that you've cloned the repository to some local destination.
@@ -29,10 +24,7 @@ https://www.anaconda.com/distribution
 3. Create autograding environment.
 `conda create -n autograding python=3.6.8 anaconda`
 
-4. Install Jupyter Notebook.
-`conda install -c conda-forge notebook`
-
-5. Install the autograder library from Carme
+4. Install the autograder library from Carme
 `conda create --name autograder --yes`
 `conda activate autograder`
 `#change to the autograder directory`
@@ -42,4 +34,17 @@ https://www.anaconda.com/distribution
 
 If you have problems with installation, make sure you activate the autograder in Anaconda Prompt using `conda activate autograder` and navigate to your local repository before installing the required tools.
 
-Once the dependencies are installed, run Jupyter Notebook and find an assignment to grade (default location is within your local autograder repository).
+Once the dependencies are installed, run Jupyter Notebook and open the grading notebook at 'autograder/notebooks/grade.ipynb' and follow the instructions there.
+
+### Using Google Colab and Google Drive
+Colab can be used to grade simple assignments due to its slower speed. For large classes, or simply just better performance, it is faster to grade on your laptop or on server.
+
+1. Copy the autograder repository to your base Google Drive in a folder called 'autograder'.
+
+2. Upload and open the grading notebook at 'autograder/notebooks/grade.ipynb'
+
+3. Uncomment the following lines of code and run them to use Colab:
+`from google.colab import drive`
+`drive.mount('/content/drive')`
+`!ls -al /content/drive/'My Drive'/autograder`
+Note: If your directory is different, modify either the physical directory or the code.

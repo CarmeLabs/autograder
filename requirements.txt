@@ -7,3 +7,4 @@ pandas
 prompt-toolkit==1.0.15
 bs4
 opencv-python
+notebook
